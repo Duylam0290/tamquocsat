@@ -425,8 +425,24 @@
     }
 
     function insertImage() {
-      const url = prompt('Nhap URL hinh anh:');
-      if (url) execCmd('insertImage', url);
+      const url = prompt('Nhap URL hinh anh (direct link ket thuc bang .jpg, .png, .gif, .webp):\n\nVi du: https://i.ibb.co/xxxxx/image.jpg\n\nLuu y: Khong dung link trang web nhu https://ibb.co/xxx, hay dung link truc tiep den file anh.');
+      if (url) {
+        // Check if it's a valid image URL
+        const isDirectImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url) || 
+                              url.includes('i.ibb.co') || 
+                              url.includes('imgur.com/') ||
+                              url.includes('blob.vercel-storage.com');
+        
+        if (isDirectImage || url.startsWith('data:image')) {
+          execCmd('insertImage', url);
+        } else {
+          // Try to insert anyway but warn user
+          const proceed = confirm('URL nay co the khong phai la direct image link.\n\nDe anh hien thi dung, hay su dung direct link (vi du: https://i.ibb.co/xxxxx/image.jpg thay vi https://ibb.co/xxxxx).\n\nBan co muon tiep tuc khong?');
+          if (proceed) {
+            execCmd('insertImage', url);
+          }
+        }
+      }
     }
 
     function insertVideo() {
