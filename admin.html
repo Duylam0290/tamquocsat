@@ -405,19 +405,88 @@
     // State
     let tags = [];
 
-    // Initialize
+
+
+    // Editor commands
+    function execCmd(command, value) {
+      // Check if an image is selected
+      const selection = window.getSelection();
+      const selectedNode = selection.anchorNode;
+      
+      // Find if we're dealing with an image
+      let selectedImage = null;
+      if (selectedNode) {
+        // Check if selection is on an image or its parent
+        if (selectedNode.nodeType === 1 && selectedNode.tagName === 'IMG') {
+          selectedImage = selectedNode;
+        } else if (selectedNode.parentElement) {
+          // Check if image is a sibling or child
+          const editor = document.getElementById('editor');
+          const images = editor.querySelectorAll('img');
+          images.forEach(img => {
+            // Check if image was recently clicked (has outline)
+            if (img.style.outline || img.classList.contains('selected-image')) {
+              selectedImage = img;
+            }
+          });
+        }
+      }
+      
+      // Handle alignment for images
+      if (selectedImage && (command === 'justifyLeft' || command === 'justifyCenter' || command === 'justifyRight')) {
+        // Wrap image in a div if not already wrapped
+        let wrapper = selectedImage.parentElement;
+        if (!wrapper || wrapper.id === 'editor' || wrapper.tagName !== 'DIV') {
+          wrapper = document.createElement('div');
+          wrapper.style.width = '100%';
+          wrapper.style.margin = '10px 0';
+          selectedImage.parentNode.insertBefore(wrapper, selectedImage);
+          wrapper.appendChild(selectedImage);
+        }
+        
+        // Apply alignment
+        if (command === 'justifyLeft') {
+          wrapper.style.textAlign = 'left';
+          selectedImage.style.display = 'inline-block';
+        } else if (command === 'justifyCenter') {
+          wrapper.style.textAlign = 'center';
+          selectedImage.style.display = 'inline-block';
+        } else if (command === 'justifyRight') {
+          wrapper.style.textAlign = 'right';
+          selectedImage.style.display = 'inline-block';
+        }
+        
+        document.getElementById('editor').focus();
+        return;
+      }
+      
+      document.execCommand(command, false, value);
+      document.getElementById('editor').focus();
+    }
+    
+    // Handle image selection in editor
     document.addEventListener('DOMContentLoaded', function() {
+      const editor = document.getElementById('editor');
+      
+      editor.addEventListener('click', function(e) {
+        // Clear all image selections first
+        editor.querySelectorAll('img').forEach(img => {
+          img.style.outline = '';
+          img.classList.remove('selected-image');
+        });
+        
+        // If clicked on an image, select it
+        if (e.target.tagName === 'IMG') {
+          e.target.style.outline = '3px solid #c9a227';
+          e.target.classList.add('selected-image');
+        }
+      });
+      
       // Set default publish date to now
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       document.getElementById('publishDate').value = now.toISOString().slice(0, 16);
     });
-
-    // Editor commands
-    function execCmd(command, value) {
-      document.execCommand(command, false, value);
-      document.getElementById('editor').focus();
-    }
 
     function insertLink() {
       const url = prompt('Nhap URL:');
