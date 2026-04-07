@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tam Quoc Sat - Vu Tuong Giac Tinh</title>
+  <meta name="description" content="Game chien thuat Tam Quoc hay nhat - Trai nghiem the gioi huyen thoai">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c9a227',
+            'primary-foreground': '#1a1a1a',
+            secondary: '#8b0000',
+            accent: '#d4a84b',
+            background: '#1a1410',
+            foreground: '#f5f0e8',
+            card: '#2a2218',
+            'card-foreground': '#f5f0e8',
+            muted: '#3a3228',
+            'muted-foreground': '#a89a8a',
+            border: '#4a4238',
+          },
+          fontFamily: {
+            serif: ['Noto Serif SC', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      background-color: #1a1410;
+      color: #f5f0e8;
+      font-family: 'Inter', sans-serif;
+    }
+    .text-gold-gradient {
+      background: linear-gradient(135deg, #c9a227, #d4a84b, #c9a227);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .ancient-border {
+      border: 2px solid #c9a227;
+      box-shadow: 0 0 20px rgba(201, 162, 39, 0.2);
+    }
+    .glow-gold {
+      box-shadow: 0 0 20px rgba(201, 162, 39, 0.4);
+    }
+    .line-clamp-1 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+    }
+    .line-clamp-2 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    /* Hide scrollbar */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ==================== HEADER ==================== -->
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-2">
+          <img src="icon_logo-Diqx__76.png" alt="Tam Quoc Sat Logo" class="h-10 lg:h-12 w-auto">
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:flex items-center gap-8">
+          <a href="#home" class="text-foreground/80 hover:text-primary font-medium text-lg transition-colors duration-300 relative group">
+            Trang Chu
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="#news" class="text-foreground/80 hover:text-primary font-medium text-lg transition-colors duration-300 relative group">
+            Tin Tuc
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="#characters" class="text-foreground/80 hover:text-primary font-medium text-lg transition-colors duration-300 relative group">
+            Danh Tuong
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="#guide" class="text-foreground/80 hover:text-primary font-medium text-lg transition-colors duration-300 relative group">
+            Cam Nang
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+        </nav>
+
+        <!-- Download Button (Desktop) -->
+        <div class="hidden lg:flex items-center gap-4">
+          <button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold rounded-lg hover:from-accent hover:to-primary transition-all duration-300 glow-gold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Tai Game
+          </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="lg:hidden p-2 text-foreground">
+          <svg id="menuIconOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          <svg id="menuIconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div id="mobileMenu" class="lg:hidden hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-md border-b border-primary/30">
+        <nav class="flex flex-col p-4 gap-4">
+          <a href="#home" class="mobile-nav-link text-foreground/80 hover:text-primary font-medium text-lg py-2 transition-colors">Trang Chu</a>
+          <a href="#news" class="mobile-nav-link text-foreground/80 hover:text-primary font-medium text-lg py-2 transition-colors">Tin Tuc</a>
+          <a href="#characters" class="mobile-nav-link text-foreground/80 hover:text-primary font-medium text-lg py-2 transition-colors">Danh Tuong</a>
+          <a href="#guide" class="mobile-nav-link text-foreground/80 hover:text-primary font-medium text-lg py-2 transition-colors">Cam Nang</a>
+          <button class="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold rounded-lg mt-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Tai Game
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO BANNER ==================== -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-njcQpntlhV2aZxTgdB8NmL03gB9UX7.png" alt="Hero Background" class="w-full h-full object-cover object-top md:object-center">
+      <div class="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 container mx-auto px-4 text-center flex flex-col items-center justify-end md:justify-center min-h-screen pt-20 pb-32 md:pb-20">
+      <!-- Logo -->
+      <div class="mb-4 md:mb-8">
+        <img src="slogan3-BVWTqWOa.png" alt="Game Slogan" class="w-[200px] sm:w-[280px] md:w-[400px] lg:w-[500px] h-auto drop-shadow-2xl">
+      </div>
+
+      <!-- Tagline -->
+      <h1 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-serif font-bold text-gold-gradient mb-2 md:mb-4 tracking-wider">
+        Chien Luoc Giac Tinh
+      </h1>
+      <p class="text-sm sm:text-base md:text-xl text-foreground/80 mb-6 md:mb-12 max-w-2xl px-4">
+        Trai nghiem the gioi Tam Quoc huyen thoai
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 w-full sm:w-auto px-4">
+        <button class="group flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-secondary via-red-700 to-secondary text-white font-bold text-base sm:text-lg rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-red-900/50 w-full sm:w-auto justify-center">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Choi Ngay
+        </button>
+        <button class="group flex items-center gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-primary text-primary font-bold text-base sm:text-lg rounded-lg hover:bg-primary hover:text-primary-foreground transition-all duration-300 w-full sm:w-auto justify-center">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Xem Trailer
+        </button>
+      </div>
+
+      <!-- Download Options -->
+      <div class="mt-8 md:mt-16 flex flex-wrap items-center justify-center gap-2 sm:gap-4 px-4">
+        <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-card/80 backdrop-blur rounded-lg border border-border">
+          <img src="qr_code.jpg" alt="QR Code" class="w-10 h-10 sm:w-14 sm:h-14 rounded">
+          <span class="text-xs sm:text-sm text-muted-foreground hidden sm:block">Quet ma tai game</span>
+        </div>
+        <button class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-card/80 backdrop-blur rounded-lg border border-border hover:border-primary transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"></path></svg>
+          <span class="font-medium text-sm sm:text-base">App Store</span>
+        </button>
+        <button class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-card/80 backdrop-blur rounded-lg border border-border hover:border-primary transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 2.047a.5.5 0 0 0-.388-.047l-9.5 2.5a.5.5 0 0 0-.385.485v6.515H5.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h1.75v3.5a.5.5 0 0 0 .5.5h8.5a.5.5 0 0 0 .5-.5v-3.5h1.75a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-1.75V5.5l.885-.233a.5.5 0 0 0 .365-.543l-.5-2.5a.5.5 0 0 0-.477-.177z"></path></svg>
+          <span class="font-medium text-sm sm:text-base">Android</span>
+        </button>
+        <button class="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-3 bg-card/80 backdrop-blur rounded-lg border border-border hover:border-primary transition-colors">
+          <span class="font-bold text-primary text-sm sm:text-base">TapTap</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+      <div class="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
+        <div class="w-1.5 h-3 bg-primary rounded-full animate-pulse"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== NEWS SECTION ==================== -->
+  <section id="news" class="py-12 md:py-20 bg-gradient-to-b from-background to-card/50">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <div class="text-center mb-8 md:mb-12">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gold-gradient mb-4">
+          TIN TUC MOI NHAT
+        </h2>
+        <div class="w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 md:gap-8">
+        <!-- Featured Banner -->
+        <div class="lg:col-span-1">
+          <div class="relative aspect-[4/3] rounded-lg overflow-hidden ancient-border group">
+            <img src="swip1.jpg" alt="Featured News" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4">
+              <span class="inline-block px-3 py-1 bg-secondary text-white text-sm rounded mb-2">Noi Bat</span>
+              <h3 class="text-lg font-bold text-foreground line-clamp-2">Giac Tinh Tap Ket - Phat Kim Dao</h3>
+            </div>
+          </div>
+
+          <!-- Additional banner -->
+          <div class="relative aspect-video rounded-lg overflow-hidden ancient-border mt-4 group hidden lg:block">
+            <img src="swip2.jpg" alt="Event Banner" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+          </div>
+        </div>
+
+        <!-- News List -->
+        <div class="lg:col-span-2">
+          <!-- Tabs -->
+          <div class="flex items-center gap-2 mb-4 md:mb-6 overflow-x-auto pb-2 hide-scrollbar">
+            <button data-tab="latest" class="news-tab px-4 sm:px-6 py-2 sm:py-2.5 font-medium rounded-lg transition-all duration-300 whitespace-nowrap bg-primary text-primary-foreground">Moi Nhat</button>
+            <button data-tab="announcement" class="news-tab px-4 sm:px-6 py-2 sm:py-2.5 font-medium rounded-lg transition-all duration-300 whitespace-nowrap bg-card text-muted-foreground hover:text-foreground hover:bg-muted">Cao Thi</button>
+            <button data-tab="event" class="news-tab px-4 sm:px-6 py-2 sm:py-2.5 font-medium rounded-lg transition-all duration-300 whitespace-nowrap bg-card text-muted-foreground hover:text-foreground hover:bg-muted">Su Kien</button>
+            <button data-tab="news" class="news-tab px-4 sm:px-6 py-2 sm:py-2.5 font-medium rounded-lg transition-all duration-300 whitespace-nowrap bg-card text-muted-foreground hover:text-foreground hover:bg-muted">Tin Tuc</button>
+            <button class="ml-auto flex items-center gap-1 text-primary hover:text-accent transition-colors whitespace-nowrap text-sm">
+              Xem Them
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
+
+          <!-- News Items -->
+          <div id="newsContainer" class="space-y-3">
+            <!-- News items will be rendered here by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CHARACTER SHOWCASE ==================== -->
+  <section id="characters" class="py-12 md:py-20 relative overflow-hidden">
+    <!-- Background -->
+    <div class="absolute inset-0 bg-cover bg-center opacity-20" style="background-image: url('role_bg-CeFezcmw.png');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Section Title -->
+      <div class="text-center mb-8 md:mb-12">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gold-gradient mb-4">
+          DANH TUONG XUAT TRAN
+        </h2>
+        <div class="w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
+        <!-- Character Info -->
+        <div class="order-2 lg:order-1 space-y-4 md:space-y-6">
+          <!-- Name -->
+          <div>
+            <img id="charNameImage" src="role_name2.png" alt="Character Name" class="w-auto h-16 sm:h-20 md:h-24 lg:h-32 object-contain">
+            <div class="flex items-center gap-3 sm:gap-4 mt-3 sm:mt-4">
+              <span id="charFaction" class="px-3 sm:px-4 py-1 sm:py-1.5 text-white font-bold rounded text-sm sm:text-base bg-blue-700">Nguy</span>
+              <span id="charTitle" class="text-base sm:text-xl text-primary font-serif">[Tri Giam Phu Nhan]</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-3 sm:gap-4">
+            <button class="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors text-sm sm:text-base">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+              Thu Xuat
+            </button>
+            <button class="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 border-2 border-border text-foreground rounded-lg hover:border-primary transition-colors">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            </button>
+          </div>
+
+          <!-- Description -->
+          <p id="charDescription" class="text-foreground/80 leading-relaxed text-sm sm:text-base md:text-lg">
+            Tan Hien Anh, nguoi Dinh Xuyen Duong Tra, con gai cua danh si Tan Bi thoi Tao Nguy. Ba la nguoi phu nu co tai va tam nhin xa trong thoi Tam Quoc.
+          </p>
+
+          <!-- Stats -->
+          <div class="space-y-3 sm:space-y-4 p-4 sm:p-6 bg-card/50 rounded-lg border border-border">
+            <h4 class="text-base sm:text-lg font-bold text-primary mb-3 sm:mb-4">Chi So</h4>
+            <div class="space-y-1">
+              <div class="flex justify-between text-sm"><span class="text-muted-foreground">Cong Kich</span><span id="statAttack" class="text-primary font-medium">75</span></div>
+              <div class="h-2 bg-muted rounded-full overflow-hidden"><div id="statAttackBar" class="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500" style="width: 75%;"></div></div>
+            </div>
+            <div class="space-y-1">
+              <div class="flex justify-between text-sm"><span class="text-muted-foreground">Phong Thu</span><span id="statDefense" class="text-primary font-medium">85</span></div>
+              <div class="h-2 bg-muted rounded-full overflow-hidden"><div id="statDefenseBar" class="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500" style="width: 85%;"></div></div>
+            </div>
+            <div class="space-y-1">
+              <div class="flex justify-between text-sm"><span class="text-muted-foreground">Sinh Luc</span><span id="statHealth" class="text-primary font-medium">90</span></div>
+              <div class="h-2 bg-muted rounded-full overflow-hidden"><div id="statHealthBar" class="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500" style="width: 90%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Character Image -->
+        <div class="order-1 lg:order-2 relative">
+          <div class="relative aspect-[3/4] max-w-xs sm:max-w-sm md:max-w-md mx-auto">
+            <img id="charImage" src="role_img2.png" alt="Character" class="w-full h-full object-contain drop-shadow-2xl transition-all duration-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- Character Selector -->
+      <div class="mt-8 md:mt-12 flex items-center justify-center gap-2 sm:gap-4">
+        <button id="charPrevBtn" class="p-2 sm:p-3 bg-primary/20 hover:bg-primary/40 rounded-lg transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+
+        <div id="charAvatars" class="flex items-center gap-2 sm:gap-3 overflow-x-auto px-2 sm:px-4 py-2 hide-scrollbar">
+          <!-- Avatars will be rendered by JS -->
+        </div>
+
+        <button id="charNextBtn" class="p-2 sm:p-3 bg-primary/20 hover:bg-primary/40 rounded-lg transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FEATURES SECTION ==================== -->
+  <section id="guide" class="py-12 md:py-20 bg-gradient-to-b from-card/50 to-background">
+    <div class="container mx-auto px-4">
+      <!-- Section Title -->
+      <div class="text-center mb-8 md:mb-12">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gold-gradient mb-4">
+          TINH NANG NOI BAT
+        </h2>
+        <div class="w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
+      </div>
+
+      <!-- Features Carousel -->
+      <div class="relative max-w-5xl mx-auto">
+        <div class="relative aspect-video rounded-xl overflow-hidden ancient-border">
+          <img id="featureImage" src="feature_img1.jpg" alt="Feature" class="w-full h-full object-cover transition-all duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+            <h3 id="featureTitle" class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-1 sm:mb-2">
+              Che Do Tran Dau Da Dang
+            </h3>
+            <p id="featureDesc" class="text-sm sm:text-base md:text-lg text-foreground/80">
+              Tham gia nhieu che do choi hap dan tu PvP den PvE
+            </p>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <button id="featurePrevBtn" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-background/80 hover:bg-primary rounded-full transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button id="featureNextBtn" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 bg-background/80 hover:bg-primary rounded-full transition-colors">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+
+      <!-- Dots -->
+      <div id="featureDots" class="flex items-center justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
+        <!-- Dots will be rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-card border-t border-border">
+    <div class="container mx-auto px-4 py-8 md:py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
+        <!-- Publisher Logo -->
+        <div class="flex items-center justify-center md:justify-start gap-4">
+          <img src="yoka_deep.png" alt="Yokaverse" class="h-8 sm:h-10 w-auto">
+          <img src="year_limit.png" alt="12+" class="h-10 sm:h-12 w-auto">
+        </div>
+
+        <!-- Links -->
+        <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
+          <a href="#" class="text-muted-foreground hover:text-primary text-xs sm:text-sm transition-colors">Dieu Khoan Dich Vu</a>
+          <a href="#" class="text-muted-foreground hover:text-primary text-xs sm:text-sm transition-colors">Chinh Sach Bao Mat</a>
+          <a href="#" class="text-muted-foreground hover:text-primary text-xs sm:text-sm transition-colors">Lien He</a>
+          <a href="#" class="text-muted-foreground hover:text-primary text-xs sm:text-sm transition-colors">Ho Tro</a>
+        </div>
+
+        <!-- Social -->
+        <div class="flex items-center justify-center md:justify-end gap-3 sm:gap-4">
+          <button class="p-2 bg-muted rounded-lg hover:bg-primary/20 transition-colors">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </button>
+          <button class="p-2 bg-muted rounded-lg hover:bg-primary/20 transition-colors">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#1a1410"/></svg>
+          </button>
+          <button class="p-2 bg-muted rounded-lg hover:bg-primary/20 transition-colors">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8">
+        <div class="text-center space-y-3 sm:space-y-4">
+          <p class="text-xs sm:text-sm text-muted-foreground">
+            Khong choi game qua nhieu. Choi game lanh manh, dung de game choi minh.
+          </p>
+          <p class="text-xs sm:text-sm text-muted-foreground">
+            Nha phat hanh: Yokaverse | ICP: 2021034872-4
+          </p>
+          <p class="text-xs text-muted-foreground">
+            Copyright 2026 Tam Quoc Sat - Vu Tuong Giac Tinh. All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ===== DATA =====
+    const newsItems = [
+      { id: 1, tag: "Cao Thi", tagColor: "bg-red-800", title: "Tam Quoc Sat Vu Tuong Giac Tinh chinh thuc ra mat", date: "2026-03-31", category: "announcement" },
+      { id: 2, tag: "Cao Thi", tagColor: "bg-red-800", title: "Thong bao bao tri he thong ngay 30/03", date: "2026-03-30", category: "announcement" },
+      { id: 3, tag: "Su Kien", tagColor: "bg-amber-700", title: "Su kien Lac Kim Dao - Nhan qua gia tri", date: "2026-03-30", category: "event" },
+      { id: 4, tag: "Tin Tuc", tagColor: "bg-green-700", title: "Chuc mung can moc 1 trieu nguoi choi!", date: "2026-03-24", category: "news" },
+      { id: 5, tag: "Su Kien", tagColor: "bg-amber-700", title: "Dang ky som - Nhan qua VIP doc quyen", date: "2026-03-20", category: "event" },
+    ];
+
+    const characters = [
+      { id: 1, name: "Tan Hien Anh", title: "Tri Giam Phu Nhan", faction: "Nguy", factionColor: "bg-blue-700", image: "role_img2.png", nameImage: "role_name2.png", avatar: "thumbs_role2.png", avatarActive: "thumbs_checked_role2.png", stats: { attack: 75, defense: 85, health: 90 }, description: "Tan Hien Anh, nguoi Dinh Xuyen Duong Tra, con gai cua danh si Tan Bi thoi Tao Nguy. Ba la nguoi phu nu co tai va tam nhin xa trong thoi Tam Quoc. Ba tung du doan chinh xac cac su kien trong Tao Nguy, nhieu lan giup gia dinh tranh hoa." },
+      { id: 2, name: "Quan Vu", title: "Vo Thanh", faction: "Thuc", factionColor: "bg-green-700", image: "role_img1.png", nameImage: "role_name1.png", avatar: "thumbs_role1.png", avatarActive: "thumbs_checked_role1.png", stats: { attack: 95, defense: 80, health: 85 }, description: "Quan Vu, tu Van Truong, la mot trong ngu ho tuong cua Thuc Han. Ong noi tieng voi long trung nghia va vo cong tuyet luan. Thanh Long Yen Nguyet Dao cua ong da tro thanh huyen thoai." },
+      { id: 3, name: "Dieu Thuyen", title: "Tu Dai My Nhan", faction: "Quan", factionColor: "bg-yellow-600", image: "role_img3.png", nameImage: "role_name3.png", avatar: "thumbs_role3.png", avatarActive: "thumbs_checked_role3.png", stats: { attack: 60, defense: 70, health: 75 }, description: "Dieu Thuyen la mot trong tu dai my nhan cua Trung Quoc co dai. Nang co sac dep khuynh quoc khuynh thanh, duoc vi nhu la nguoi dep lam nghe ca nghieng nuoc." },
+      { id: 4, name: "Chu Du", title: "Dai Do Doc", faction: "Ngo", factionColor: "bg-red-700", image: "role_img5.png", nameImage: "role_name5.png", avatar: "thumbs_role5.png", avatarActive: "thumbs_checked_role5.png", stats: { attack: 85, defense: 75, health: 80 }, description: "Chu Du, tu Cong Can, la danh tuong kiet xuat cua Dong Ngo. Ong da chi huy quan Ngo danh bai quan Tao Tao trong tran Xich Bich luong danh." },
+      { id: 5, name: "Gia Cat Luong", title: "Ngu Long", faction: "Thuc", factionColor: "bg-green-700", image: "role_img6.png", nameImage: "role_name6.png", avatar: "thumbs_role6.png", avatarActive: "thumbs_checked_role6.png", stats: { attack: 70, defense: 90, health: 85 }, description: "Gia Cat Luong, tu Khong Minh, la quan su tai ba bac nhat thoi Tam Quoc. Ong duoc menh danh la Ngu Long Tien Sinh voi tri tue sieu pham va tai dung binh nhu than." },
+    ];
+
+    const features = [
+      { id: 1, title: "Che Do Tran Dau Da Dang", description: "Tham gia nhieu che do choi hap dan tu PvP den PvE", image: "feature_img1.jpg" },
+      { id: 2, title: "He Thong Tuong Phong Phu", description: "Hon 200 tuong voi ky nang doc dao", image: "feature_img2.jpg" },
+      { id: 3, title: "Do Hoa Tuyet Dep", description: "Hinh anh chat luong cao, hieu ung an tuong", image: "feature_img3.jpg" },
+      { id: 4, title: "Chien Thuat Sau Sac", description: "Ket hop tuong va ky nang de tao chien thuat rieng", image: "feature_img4.jpg" },
+      { id: 5, title: "Su Kien Lien Tuc", description: "Cap nhat thuong xuyen voi nhieu su kien hap dan", image: "feature_img5.jpg" },
+    ];
+
+    // ===== HEADER SCROLL EFFECT =====
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('bg-background/95', 'backdrop-blur-md', 'border-b', 'border-primary/30');
+        header.classList.remove('bg-transparent');
+      } else {
+        header.classList.remove('bg-background/95', 'backdrop-blur-md', 'border-b', 'border-primary/30');
+        header.classList.add('bg-transparent');
+      }
+    });
+
+    // ===== MOBILE MENU =====
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIconOpen = document.getElementById('menuIconOpen');
+    const menuIconClose = document.getElementById('menuIconClose');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuIconOpen.classList.toggle('hidden');
+      menuIconClose.classList.toggle('hidden');
+    });
+
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuIconOpen.classList.remove('hidden');
+        menuIconClose.classList.add('hidden');
+      });
+    });
+
+    // ===== NEWS TABS =====
+    let activeNewsTab = 'latest';
+    const newsContainer = document.getElementById('newsContainer');
+    const newsTabs = document.querySelectorAll('.news-tab');
+
+    function renderNews(tab) {
+      const filtered = tab === 'latest' ? newsItems : newsItems.filter(item => item.category === tab);
+      newsContainer.innerHTML = filtered.map(item => `
+        <article class="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-card/50 rounded-lg border border-border hover:border-primary/50 transition-all duration-300 cursor-pointer">
+          <span class="shrink-0 px-3 py-1 text-xs sm:text-sm font-medium text-white rounded ${item.tagColor} w-fit">${item.tag}</span>
+          <h4 class="flex-1 font-medium text-foreground/80 group-hover:text-primary transition-colors line-clamp-1 text-sm sm:text-base">${item.title}</h4>
+          <time class="shrink-0 text-xs sm:text-sm text-muted-foreground">${item.date}</time>
+        </article>
+      `).join('');
+    }
+
+    newsTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activeNewsTab = tab.dataset.tab;
+        newsTabs.forEach(t => {
+          if (t.dataset.tab === activeNewsTab) {
+            t.classList.add('bg-primary', 'text-primary-foreground');
+            t.classList.remove('bg-card', 'text-muted-foreground', 'hover:text-foreground', 'hover:bg-muted');
+          } else {
+            t.classList.remove('bg-primary', 'text-primary-foreground');
+            t.classList.add('bg-card', 'text-muted-foreground', 'hover:text-foreground', 'hover:bg-muted');
+          }
+        });
+        renderNews(activeNewsTab);
+      });
+    });
+
+    renderNews('latest');
+
+    // ===== CHARACTER SHOWCASE =====
+    let selectedCharIndex = 0;
+    const charImage = document.getElementById('charImage');
+    const charNameImage = document.getElementById('charNameImage');
+    const charFaction = document.getElementById('charFaction');
+    const charTitle = document.getElementById('charTitle');
+    const charDescription = document.getElementById('charDescription');
+    const statAttack = document.getElementById('statAttack');
+    const statDefense = document.getElementById('statDefense');
+    const statHealth = document.getElementById('statHealth');
+    const statAttackBar = document.getElementById('statAttackBar');
+    const statDefenseBar = document.getElementById('statDefenseBar');
+    const statHealthBar = document.getElementById('statHealthBar');
+    const charAvatars = document.getElementById('charAvatars');
+    const charPrevBtn = document.getElementById('charPrevBtn');
+    const charNextBtn = document.getElementById('charNextBtn');
+
+    function updateCharacter() {
+      const char = characters[selectedCharIndex];
+      charImage.src = char.image;
+      charNameImage.src = char.nameImage;
+      charFaction.textContent = char.faction;
+      charFaction.className = `px-3 sm:px-4 py-1 sm:py-1.5 text-white font-bold rounded text-sm sm:text-base ${char.factionColor}`;
+      charTitle.textContent = `[${char.title}]`;
+      charDescription.textContent = char.description;
+      statAttack.textContent = char.stats.attack;
+      statDefense.textContent = char.stats.defense;
+      statHealth.textContent = char.stats.health;
+      statAttackBar.style.width = `${char.stats.attack}%`;
+      statDefenseBar.style.width = `${char.stats.defense}%`;
+      statHealthBar.style.width = `${char.stats.health}%`;
+      renderCharAvatars();
+    }
+
+    function renderCharAvatars() {
+      charAvatars.innerHTML = characters.map((char, index) => `
+        <button onclick="selectCharacter(${index})" class="relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 shrink-0 ${selectedCharIndex === index ? 'border-primary scale-110 glow-gold' : 'border-border hover:border-primary/50'}">
+          <img src="${selectedCharIndex === index ? char.avatarActive : char.avatar}" alt="${char.name}" class="w-full h-full object-cover">
+        </button>
+      `).join('');
+    }
+
+    window.selectCharacter = function(index) {
+      selectedCharIndex = index;
+      updateCharacter();
+    };
+
+    charPrevBtn.addEventListener('click', () => {
+      selectedCharIndex = selectedCharIndex === 0 ? characters.length - 1 : selectedCharIndex - 1;
+      updateCharacter();
+    });
+
+    charNextBtn.addEventListener('click', () => {
+      selectedCharIndex = selectedCharIndex === characters.length - 1 ? 0 : selectedCharIndex + 1;
+      updateCharacter();
+    });
+
+    updateCharacter();
+
+    // ===== FEATURES CAROUSEL =====
+    let currentFeatureIndex = 0;
+    const featureImage = document.getElementById('featureImage');
+    const featureTitle = document.getElementById('featureTitle');
+    const featureDesc = document.getElementById('featureDesc');
+    const featureDots = document.getElementById('featureDots');
+    const featurePrevBtn = document.getElementById('featurePrevBtn');
+    const featureNextBtn = document.getElementById('featureNextBtn');
+
+    function updateFeature() {
+      const feature = features[currentFeatureIndex];
+      featureImage.src = feature.image;
+      featureTitle.textContent = feature.title;
+      featureDesc.textContent = feature.description;
+      renderFeatureDots();
+    }
+
+    function renderFeatureDots() {
+      featureDots.innerHTML = features.map((_, index) => `
+        <button onclick="selectFeature(${index})" class="h-2 sm:h-3 rounded-full transition-all duration-300 ${currentFeatureIndex === index ? 'bg-primary w-6 sm:w-8' : 'bg-muted hover:bg-primary/50 w-2 sm:w-3'}"></button>
+      `).join('');
+    }
+
+    window.selectFeature = function(index) {
+      currentFeatureIndex = index;
+      updateFeature();
+    };
+
+    featurePrevBtn.addEventListener('click', () => {
+      currentFeatureIndex = currentFeatureIndex === 0 ? features.length - 1 : currentFeatureIndex - 1;
+      updateFeature();
+    });
+
+    featureNextBtn.addEventListener('click', () => {
+      currentFeatureIndex = currentFeatureIndex === features.length - 1 ? 0 : currentFeatureIndex + 1;
+      updateFeature();
+    });
+
+    updateFeature();
+
+    // ===== AUTO SLIDE FEATURES =====
+    setInterval(() => {
+      currentFeatureIndex = currentFeatureIndex === features.length - 1 ? 0 : currentFeatureIndex + 1;
+      updateFeature();
+    }, 5000);
+
+    // ===== SMOOTH SCROLL =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
