@@ -18,6 +18,17 @@
   --font-sans: var(--font-noto-sans);
   --font-serif: var(--font-noto-serif);
   --radius: 0.5rem;
+  
+  /* Admin Dark Theme - Tam Quoc Sat */
+  --color-admin-bg: #1a1410;
+  --color-admin-card: #2a2218;
+  --color-admin-border: #4a4238;
+  --color-admin-gold: #c9a227;
+  --color-admin-gold-light: #e0c060;
+  --color-admin-toolbar: #352d22;
+  --color-admin-editor: #f5f0e8;
+  --color-admin-text: #e8e0d0;
+  --color-admin-muted: #8a8070;
 }
 
 * {
