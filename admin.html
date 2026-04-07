@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soan bai viet moi - Tam Quoc Sat Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'admin-bg': '#1a1410',
+            'admin-card': '#2a2218',
+            'admin-border': '#4a4238',
+            'admin-gold': '#c9a227',
+            'admin-gold-light': '#e0c060',
+            'admin-toolbar': '#352d22',
+            'admin-editor': '#f5f0e8',
+            'admin-text': '#e8e0d0',
+            'admin-muted': '#8a8070',
+          },
+          fontFamily: {
+            'serif': ['Noto Serif SC', 'serif'],
+            'sans': ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [contenteditable]:empty:before {
+      content: attr(data-placeholder);
+      color: #8a8070;
+    }
+    [contenteditable]:focus {
+      outline: none;
+    }
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.5;
+    }
+    select {
+      background-image: none;
+    }
+    .prose img {
+      max-width: 100%;
+      height: auto;
+    }
+    .prose iframe {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-admin-bg font-sans">
+  <!-- Topbar -->
+  <header class="sticky top-0 z-50 bg-admin-card border-b border-admin-border">
+    <div class="flex items-center justify-between px-4 py-3 lg:px-6">
+      <!-- Left side -->
+      <div class="flex items-center gap-3">
+        <button type="button" class="flex items-center gap-2 text-admin-gold hover:text-admin-gold-light transition-colors">
+          <!-- Arrow Left Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+          </svg>
+          <span class="hidden sm:inline">Quay lai</span>
+        </button>
+        <div class="w-px h-6 bg-admin-border hidden sm:block"></div>
+        <h1 class="text-admin-text font-medium text-sm sm:text-base">Soan bai viet moi</h1>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button type="button" class="flex items-center gap-2 px-3 py-2 sm:px-4 rounded-lg border border-admin-border bg-admin-toolbar text-admin-text hover:border-admin-gold hover:text-admin-gold transition-colors">
+          <!-- Eye Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span class="hidden sm:inline">Xem truoc</span>
+        </button>
+        <button type="button" class="flex items-center gap-2 px-3 py-2 sm:px-4 rounded-lg bg-gradient-to-r from-admin-gold to-admin-gold-light text-admin-bg font-medium hover:from-[#d4ad32] hover:to-[#e8c870] transition-all shadow-lg shadow-admin-gold/20">
+          <!-- Send Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+          </svg>
+          <span class="hidden sm:inline">Dang bai</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="p-4 lg:p-6">
+    <div class="flex flex-col lg:flex-row gap-6 max-w-[1600px] mx-auto">
+      <!-- Left Column - Editor (75%) -->
+      <div class="w-full lg:w-3/4 space-y-4">
+        <!-- Title Input -->
+        <input 
+          type="text" 
+          id="postTitle"
+          placeholder="Tieu de bai viet..."
+          class="w-full bg-transparent text-2xl sm:text-3xl font-serif font-bold text-admin-text placeholder-admin-muted border-b-2 border-admin-border focus:border-admin-gold outline-none pb-4 transition-colors"
+        >
+
+        <!-- Toolbar -->
+        <div class="bg-admin-toolbar border border-admin-border rounded-lg p-2 flex flex-wrap items-center gap-1">
+          <!-- Undo -->
+          <button type="button" onclick="execCmd('undo')" title="Hoan tac" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+            </svg>
+          </button>
+          <!-- Redo -->
+          <button type="button" onclick="execCmd('redo')" title="Lam lai" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+            </svg>
+          </button>
+
+          <div class="w-px h-6 bg-admin-border mx-1"></div>
+
+          <!-- Font selector -->
+          <div class="relative">
+            <select onchange="execCmd('fontName', this.value)" class="appearance-none bg-admin-card border border-admin-border rounded px-2 py-1.5 text-sm text-admin-text cursor-pointer hover:border-admin-gold focus:outline-none focus:border-admin-gold pr-7">
+              <option value="inherit">Font chu</option>
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+            <svg class="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2 text-admin-muted pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+
+          <!-- Font size selector -->
+          <div class="relative">
+            <select onchange="execCmd('fontSize', this.value)" class="appearance-none bg-admin-card border border-admin-border rounded px-2 py-1.5 text-sm text-admin-text cursor-pointer hover:border-admin-gold focus:outline-none focus:border-admin-gold pr-7">
+              <option value="3">Co chu</option>
+              <option value="1">Nho</option>
+              <option value="2">Vua</option>
+              <option value="3">Binh thuong</option>
+              <option value="4">Lon</option>
+              <option value="5">Rat lon</option>
+              <option value="6">Tieu de</option>
+            </select>
+            <svg class="w-3 h-3 absolute right-2 top-1/2 -translate-y-1/2 text-admin-muted pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </div>
+
+          <div class="w-px h-6 bg-admin-border mx-1"></div>
+
+          <!-- Bold -->
+          <button type="button" onclick="execCmd('bold')" title="In dam (Ctrl+B)" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 12a4 4 0 0 0 0-8H6v8"/><path d="M15 20a4 4 0 0 0 0-8H6v8Z"/>
+            </svg>
+          </button>
+          <!-- Italic -->
+          <button type="button" onclick="execCmd('italic')" title="In nghieng (Ctrl+I)" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" x2="10" y1="4" y2="4"/><line x1="14" x2="5" y1="20" y2="20"/><line x1="15" x2="9" y1="4" y2="20"/>
+            </svg>
+          </button>
+          <!-- Underline -->
+          <button type="button" onclick="execCmd('underline')" title="Gach chan (Ctrl+U)" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" x2="20" y1="20" y2="20"/>
+            </svg>
+          </button>
+
+          <div class="w-px h-6 bg-admin-border mx-1"></div>
+
+          <!-- Text color -->
+          <div class="relative">
+            <input type="color" id="textColorPicker" onchange="execCmd('foreColor', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <div class="p-2 rounded hover:bg-admin-border transition-colors text-admin-text flex items-center gap-1 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" x2="15" y1="20" y2="20"/><line x1="12" x2="12" y1="4" y2="20"/>
+              </svg>
+              <div class="w-4 h-1 bg-admin-gold rounded-full"></div>
+            </div>
+          </div>
+
+          <div class="w-px h-6 bg-admin-border mx-1"></div>
+
+          <!-- Align Left -->
+          <button type="button" onclick="execCmd('justifyLeft')" title="Can trai" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" x2="3" y1="6" y2="6"/><line x1="15" x2="3" y1="12" y2="12"/><line x1="17" x2="3" y1="18" y2="18"/>
+            </svg>
+          </button>
+          <!-- Align Center -->
+          <button type="button" onclick="execCmd('justifyCenter')" title="Can giua" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" x2="3" y1="6" y2="6"/><line x1="17" x2="7" y1="12" y2="12"/><line x1="19" x2="5" y1="18" y2="18"/>
+            </svg>
+          </button>
+          <!-- Align Right -->
+          <button type="button" onclick="execCmd('justifyRight')" title="Can phai" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" x2="3" y1="6" y2="6"/><line x1="21" x2="9" y1="12" y2="12"/><line x1="21" x2="7" y1="18" y2="18"/>
+            </svg>
+          </button>
+
+          <div class="w-px h-6 bg-admin-border mx-1"></div>
+
+          <!-- Link -->
+          <button type="button" onclick="insertLink()" title="Chen lien ket" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/>
+            </svg>
+          </button>
+          <!-- Image -->
+          <button type="button" onclick="insertImage()" title="Chen hinh anh" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+            </svg>
+          </button>
+          <!-- Video -->
+          <button type="button" onclick="insertVideo()" title="Chen video" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/>
+            </svg>
+          </button>
+          <!-- List -->
+          <button type="button" onclick="execCmd('insertUnorderedList')" title="Danh sach" class="toolbar-btn p-2 rounded hover:bg-admin-border transition-colors text-admin-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Editor Body -->
+        <div 
+          id="editor"
+          contenteditable="true"
+          data-placeholder="Bat dau viet noi dung bai viet cua ban..."
+          class="w-full min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] bg-admin-editor text-admin-bg p-4 sm:p-6 rounded-lg border-2 border-admin-border focus:border-admin-gold transition-colors leading-[1.8]"
+        ></div>
+      </div>
+
+      <!-- Right Column - Settings Sidebar (25%) -->
+      <aside class="w-full lg:w-1/4 space-y-4">
+        <!-- Category Accordion -->
+        <div class="accordion border border-admin-border rounded-lg overflow-hidden">
+          <button type="button" onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 bg-admin-toolbar hover:bg-[#3d352a] transition-colors">
+            <span class="font-medium text-admin-text">Cai dat bai dang</span>
+            <svg class="accordion-icon w-4 h-4 text-admin-gold transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </button>
+          <div class="accordion-content p-4 bg-admin-card">
+            <div class="space-y-3">
+              <label class="block text-sm text-admin-muted">Chuyen muc</label>
+              <div class="relative">
+                <select id="category" class="w-full appearance-none bg-admin-bg border border-admin-border rounded-lg px-4 py-3 text-admin-text cursor-pointer hover:border-admin-gold focus:outline-none focus:border-admin-gold transition-colors">
+                  <option value="">Chon chuyen muc...</option>
+                  <option value="news">Tin tuc</option>
+                  <option value="announcement">Cao thi</option>
+                  <option value="event">Su kien</option>
+                </select>
+                <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-admin-muted pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags Accordion -->
+        <div class="accordion border border-admin-border rounded-lg overflow-hidden">
+          <button type="button" onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 bg-admin-toolbar hover:bg-[#3d352a] transition-colors">
+            <span class="font-medium text-admin-text">Nhan (Tags)</span>
+            <svg class="accordion-icon w-4 h-4 text-admin-gold transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </button>
+          <div class="accordion-content p-4 bg-admin-card">
+            <div class="space-y-3">
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  id="tagInput"
+                  placeholder="Nhap tag..."
+                  onkeydown="if(event.key==='Enter'){addTag();}"
+                  class="flex-1 bg-admin-bg border border-admin-border rounded-lg px-3 py-2 text-admin-text placeholder-admin-muted focus:outline-none focus:border-admin-gold transition-colors"
+                >
+                <button type="button" onclick="addTag()" class="px-3 py-2 bg-admin-gold text-admin-bg rounded-lg hover:bg-[#d4ad32] transition-colors font-medium">
+                  Them
+                </button>
+              </div>
+
+              <!-- Selected tags -->
+              <div id="selectedTags" class="flex flex-wrap gap-2"></div>
+
+              <!-- Suggested tags -->
+              <div>
+                <p class="text-xs text-admin-muted mb-2">Goi y:</p>
+                <div id="suggestedTags" class="flex flex-wrap gap-2">
+                  <span onclick="addSuggestedTag('Cap nhat')" class="tag-suggestion inline-flex items-center px-3 py-1 rounded-full text-sm bg-admin-toolbar text-admin-gold border border-admin-border cursor-pointer hover:bg-[#3d352a]">Cap nhat</span>
+                  <span onclick="addSuggestedTag('Su kien')" class="tag-suggestion inline-flex items-center px-3 py-1 rounded-full text-sm bg-admin-toolbar text-admin-gold border border-admin-border cursor-pointer hover:bg-[#3d352a]">Su kien</span>
+                  <span onclick="addSuggestedTag('Hoat dong')" class="tag-suggestion inline-flex items-center px-3 py-1 rounded-full text-sm bg-admin-toolbar text-admin-gold border border-admin-border cursor-pointer hover:bg-[#3d352a]">Hoat dong</span>
+                  <span onclick="addSuggestedTag('Bao tri')" class="tag-suggestion inline-flex items-center px-3 py-1 rounded-full text-sm bg-admin-toolbar text-admin-gold border border-admin-border cursor-pointer hover:bg-[#3d352a]">Bao tri</span>
+                  <span onclick="addSuggestedTag('Giai dau')" class="tag-suggestion inline-flex items-center px-3 py-1 rounded-full text-sm bg-admin-toolbar text-admin-gold border border-admin-border cursor-pointer hover:bg-[#3d352a]">Giai dau</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Publish Date Accordion -->
+        <div class="accordion border border-admin-border rounded-lg overflow-hidden">
+          <button type="button" onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 bg-admin-toolbar hover:bg-[#3d352a] transition-colors">
+            <span class="font-medium text-admin-text">Xuat ban vao</span>
+            <svg class="accordion-icon w-4 h-4 text-admin-gold transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </button>
+          <div class="accordion-content p-4 bg-admin-card">
+            <div class="space-y-3">
+              <div class="relative">
+                <input 
+                  type="datetime-local" 
+                  id="publishDate"
+                  class="w-full bg-admin-bg border border-admin-border rounded-lg px-4 py-3 text-admin-text focus:outline-none focus:border-admin-gold transition-colors"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permalink Accordion -->
+        <div class="accordion border border-admin-border rounded-lg overflow-hidden">
+          <button type="button" onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 bg-admin-toolbar hover:bg-[#3d352a] transition-colors">
+            <span class="font-medium text-admin-text">Lien ket co dinh (Permalink)</span>
+            <svg class="accordion-icon w-4 h-4 text-admin-gold transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </button>
+          <div class="accordion-content p-4 bg-admin-card">
+            <div class="space-y-2">
+              <div class="flex items-center gap-1 text-sm text-admin-muted">
+                <span>tamquocsat.com/tin-tuc/</span>
+              </div>
+              <input 
+                type="text" 
+                id="permalink"
+                placeholder="url-bai-viet"
+                oninput="formatPermalink(this)"
+                class="w-full bg-admin-bg border border-admin-border rounded-lg px-4 py-3 text-admin-text placeholder-admin-muted focus:outline-none focus:border-admin-gold transition-colors"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Thumbnail Accordion -->
+        <div class="accordion border border-admin-border rounded-lg overflow-hidden">
+          <button type="button" onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 bg-admin-toolbar hover:bg-[#3d352a] transition-colors">
+            <span class="font-medium text-admin-text">Hinh anh dai dien (Thumbnail)</span>
+            <svg class="accordion-icon w-4 h-4 text-admin-gold transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 15-6-6-6 6"/>
+            </svg>
+          </button>
+          <div class="accordion-content p-4 bg-admin-card">
+            <div class="space-y-3">
+              <input type="file" id="thumbnailInput" accept="image/*" onchange="handleThumbnailUpload(event)" class="hidden">
+
+              <div id="thumbnailPreview" class="hidden relative group">
+                <img id="thumbnailImage" src="" alt="Thumbnail preview" class="w-full h-40 object-cover rounded-lg border border-admin-border">
+                <button type="button" onclick="removeThumbnail()" class="absolute top-2 right-2 p-1.5 bg-red-500/80 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div 
+                id="thumbnailDropzone"
+                onclick="document.getElementById('thumbnailInput').click()"
+                ondrop="handleThumbnailDrop(event)"
+                ondragover="event.preventDefault(); this.classList.add('border-admin-gold', 'bg-admin-toolbar/50')"
+                ondragleave="this.classList.remove('border-admin-gold', 'bg-admin-toolbar/50')"
+                class="w-full h-40 border-2 border-dashed border-admin-border rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-admin-gold hover:bg-admin-toolbar/50 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-muted">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>
+                </svg>
+                <p class="text-sm text-admin-muted text-center px-4">
+                  Keo tha anh bia hoac click de tai len
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // State
+    let tags = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set default publish date to now
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('publishDate').value = now.toISOString().slice(0, 16);
+    });
+
+    // Editor commands
+    function execCmd(command, value) {
+      document.execCommand(command, false, value);
+      document.getElementById('editor').focus();
+    }
+
+    function insertLink() {
+      const url = prompt('Nhap URL:');
+      if (url) execCmd('createLink', url);
+    }
+
+    function insertImage() {
+      const url = prompt('Nhap URL hinh anh:');
+      if (url) execCmd('insertImage', url);
+    }
+
+    function insertVideo() {
+      const url = prompt('Nhap URL video (YouTube embed):');
+      if (url) {
+        execCmd('insertHTML', `<iframe src="${url}" width="560" height="315" frameborder="0" allowfullscreen></iframe>`);
+      }
+    }
+
+    // Accordion toggle
+    function toggleAccordion(button) {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('.accordion-icon');
+      
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.display = 'none';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // Tags management
+    function addTag() {
+      const input = document.getElementById('tagInput');
+      const tag = input.value.trim();
+      
+      if (tag && !tags.includes(tag)) {
+        tags.push(tag);
+        renderTags();
+        input.value = '';
+      }
+    }
+
+    function removeTag(tag) {
+      tags = tags.filter(t => t !== tag);
+      renderTags();
+    }
+
+    function addSuggestedTag(tag) {
+      if (!tags.includes(tag)) {
+        tags.push(tag);
+        renderTags();
+      }
+    }
+
+    function renderTags() {
+      const container = document.getElementById('selectedTags');
+      container.innerHTML = tags.map(tag => `
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-admin-gold text-admin-bg">
+          ${tag}
+          <button type="button" onclick="removeTag('${tag}')" class="hover:text-admin-bg/70">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </svg>
+          </button>
+        </span>
+      `).join('');
+    }
+
+    // Permalink formatting
+    function formatPermalink(input) {
+      input.value = input.value
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+    }
+
+    // Thumbnail handling
+    function handleThumbnailUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        displayThumbnail(file);
+      }
+    }
+
+    function handleThumbnailDrop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('border-admin-gold', 'bg-admin-toolbar/50');
+      
+      const file = event.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        displayThumbnail(file);
+      }
+    }
+
+    function displayThumbnail(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('thumbnailImage').src = e.target.result;
+        document.getElementById('thumbnailPreview').classList.remove('hidden');
+        document.getElementById('thumbnailDropzone').classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeThumbnail() {
+      document.getElementById('thumbnailImage').src = '';
+      document.getElementById('thumbnailPreview').classList.add('hidden');
+      document.getElementById('thumbnailDropzone').classList.remove('hidden');
+      document.getElementById('thumbnailInput').value = '';
+    }
+  </script>
+</body>
+</html>
